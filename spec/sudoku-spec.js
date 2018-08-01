@@ -1,19 +1,22 @@
-import { sudoku } from './../src/sudoku';
-describe('Temp', function()
+import { Sudoku } from './../src/sudoku';
+describe('Sudoku', function()
 {
-  var temp;
+  let puzzleOne;
 
-  beforeEach(function() {
-    temp = ;
+  beforeEach(function()
+  {
+    puzzleOne = new Sudoku();
   });
 
-  it('should show how beforeEach() works', function() {
-    console.log(temp);
+  it('should show how beforeEach() works', function()
+  {
+    console.log(puzzleOne.solution);
   });
 
-  it('sample test', function() {
-    tempRoman.Set(3);
-    expect(tempRoman.GetRomanNumeral()).toEqual(III);
+  it('compare sudoku puzzles', function()
+  {
+    let puzzleTwo = new Sudoku();
+    expect(puzzleOne.Equals(puzzleTwo)).toEqual(true);
   });
 
 });

@@ -24,11 +24,16 @@ module.exports =
     }),
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      title: '[Program Name]',
+      title: 'Sudoku',
       template: './src/index.html',
       inject: 'body'
     })
   ],
+  performance:
+  {
+    hints: false
+  },
+  mode: 'development',
   module:
   {
     rules: [
@@ -45,7 +50,11 @@ module.exports =
           /node_modules/,
           /spec/
         ],
-        loader: 'eslint-loader'
+        loader: 'eslint-loader',
+        options:
+        {
+          // emitWarning: true,
+        }
       }
     ]
   }
