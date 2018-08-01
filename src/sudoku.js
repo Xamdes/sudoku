@@ -3,39 +3,40 @@ export class Sudoku
   constructor()
   {
     this.solution = [];
-    this.insertionPoint = [-1,-1];
+    this.insertionColumn = 0;
+    this.insertionRow = 0;
     this.ResetArray();
   }
 
   CreatePuzzle()
   {
     console.log("CREATE PUZZLE");
-    console.log(this.solution);
-    while(this.solution[8][8] === 0)
+    Math.random();
+    let successfuleInsert = false;
+    for(let i = 0; i<16; )
     {
-      this.InsertNextNumber(RandomInt(9));
+      successfuleInsert = this.InsertNextNumber();
+      if(successfuleInsert)
+      {
+        i++;
+        console.log("SUCCESS");
+        console.log(this.solution);
+      }
+      else
+      {
+        console.log("FAILURE");
+      }
     }
   }
 
   ResetArray()
   {
+    let temp = [0,0,0,0,0,0,0,0,0];
     this.solution = [];
     for(let i = 0; i < 9; i++)
     {
-      this.solution.push(this.constructor.EmptyRow().slice());
+      this.solution.push(temp.slice());
     }
-  }
-
-  static DefaultRow()
-  {
-    let temp = [9,8,7,6,5,4,3,2,1];
-    return temp;
-  }
-
-  static EmptyRow()
-  {
-    let temp = [0,0,0,0,0,0,0,0,0];
-    return temp;
   }
 
   Equals(otherSudoku,sort=false)
@@ -70,80 +71,72 @@ export class Sudoku
     return true;
   }
 
-  ValidColumn(columnNumber)
+  ColumnContains(columnNumber, number)
   {
-    let tempSolution = this.solution[columnNumber].slice().sort().reverse();
+    let tempSolution = this.solution;
+    let tempColumn = [];
     for(let i = 0; i < 9; i++)
     {
-      if(tempSolution[i] === 0)
+      tempColumn.push(tempSolution[i][columnNumber]);
+    }
+
+    for(let i = 0; i < tempColumn.length;i++)
+    {
+      if(tempColumn[i] === number)
       {
         return true;
       }
-      else if(tempSolution[i] != this.constructor.DefaultRow()[i])
-      {
-        return false;
-      }
     }
-    return true;
+    return false;
   }
 
-  ValidRow(rowNumber)
+  RowContains(rowNumber, number)
   {
-    let tempRow = [];
-    for(let i = 0; i < 9; i++)
+    let tempRow = this.solution[rowNumber].slice().sort().reverse();
+    for(let i = 0; i < tempRow.length;i++)
     {
-      tempRow.push(this.solution[i][rowNumber]);
-    }
-    tempRow.sort().reverse();
-    for(let i = 0; i < 9; i++)
-    {
-      if(tempRow[i] === 0)
+      if(tempRow[i] === number)
       {
         return true;
       }
-      else if(tempRow[i] != this.constructor.DefaultRow()[i])
-      {
-        return false;
-      }
     }
-    return true;
+    return false;
   }
 
-  InsertNextNumber(number)
+  InsertNextNumber()
   {
-    if(this.insertionPoint[0] === -1)
+    let randomNumber = Math.floor((Math.random() * 100)%9);
+    if(randomNumber === 0)
     {
-      for(let i = 0; i < 9; i++)
-      {
-        for(let j = 0; j < 9; j++)
-        {
-          if(this.solution[i][j] === 0)
-          {
-            this.insertionPoint = [i,j];
-            i = j = 10;
-          }
-        }
-      }
+      randomNumber = 9;
     }
-    let column = this.insertionpoint[0];
-    let row = this.insertionpoint[1];
-    console.log(row+" | "+column);
-    this.solution[column][row] = number;
-    if(this.ValidColumn(column) && this.ValidRow(row))
+    let solutionArray = this.solution;
+    let insertionArray = this.insertionIndex;
+    let column = this.insertionColumn;
+    let row = this.insertionRow;
+    console.log("INSERTING: "+randomNumber+" AT:"+row+":"+column);
+    let columnValid=!(this.ColumnContains(column,randomNumber));
+    let rowValid=!(this.RowContains(row,randomNumber));
+    if(rowValid && columnValid)
     {
-      this.insertionPoint = [-1,-1];
+      solutionArray[row][column] = randomNumber;
+      this.IncrementInsertionPoint();
       return true;
     }
     else
     {
-      this.soltion[column,row] = 0;
       return false;
     }
 
   }
-}
 
-function RandomInt(max)
-{
-  return (Math.floor(Math.random()*max+1));
+  IncrementInsertionPoint()
+  {
+    this.insertionColumn++;
+    if(this.insertionColumn >8)
+    {
+      this.insertionColumn = 0;
+      this.insertionRow++;
+    }
+  }
 }
