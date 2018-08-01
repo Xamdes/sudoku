@@ -10,7 +10,7 @@ describe('Sudoku', function()
 
   it('should show how beforeEach() works', function()
   {
-    console.log(puzzleOne.solution);
+    puzzleOne.ConsoleOutput();
   });
 
   it('compare sudoku puzzles', function()
@@ -22,6 +22,7 @@ describe('Sudoku', function()
   it('create sudoku puzzles', function()
   {
     puzzleOne.CreatePuzzle();
+    puzzleOne.ConsoleOutput();
     //expect(puzzleOne.Equals(puzzleTwo)).toEqual(true);
   });
 

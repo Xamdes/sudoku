@@ -11,16 +11,14 @@ export class Sudoku
   CreatePuzzle()
   {
     console.log("CREATE PUZZLE");
-    Math.random();
     let successfuleInsert = false;
-    for(let i = 0; i<16; )
+    for(let i = 0; i<47; )
     {
       successfuleInsert = this.InsertNextNumber();
       if(successfuleInsert)
       {
         i++;
         console.log("SUCCESS");
-        console.log(this.solution);
       }
       else
       {
@@ -71,13 +69,13 @@ export class Sudoku
     return true;
   }
 
-  ColumnContains(columnNumber, number)
+  ColumnContains(number)
   {
     let tempSolution = this.solution;
     let tempColumn = [];
     for(let i = 0; i < 9; i++)
     {
-      tempColumn.push(tempSolution[i][columnNumber]);
+      tempColumn.push(tempSolution[i][this.insertionColumn]);
     }
 
     for(let i = 0; i < tempColumn.length;i++)
@@ -90,9 +88,9 @@ export class Sudoku
     return false;
   }
 
-  RowContains(rowNumber, number)
+  RowContains(number)
   {
-    let tempRow = this.solution[rowNumber].slice().sort().reverse();
+    let tempRow = this.solution[this.insertionRow].slice().sort().reverse();
     for(let i = 0; i < tempRow.length;i++)
     {
       if(tempRow[i] === number)
@@ -103,8 +101,20 @@ export class Sudoku
     return false;
   }
 
+  OneSpotLeft()
+  {
+    let tempRow = this.solution[this.insertionRow];
+    let returnValue = 45;
+    for(let i = 0; i < 9; i++)
+    {
+      returnValue -= tempRow[i];
+    }
+    return returnValue;
+  }
+
   InsertNextNumber()
   {
+    //let 45;
     let randomNumber = Math.floor((Math.random() * 100)%9);
     if(randomNumber === 0)
     {
@@ -114,9 +124,13 @@ export class Sudoku
     let insertionArray = this.insertionIndex;
     let column = this.insertionColumn;
     let row = this.insertionRow;
+    if(row === 8)
+    {
+      randomNumber = this.OneSpotLeft();
+    }
     console.log("INSERTING: "+randomNumber+" AT:"+row+":"+column);
-    let columnValid=!(this.ColumnContains(column,randomNumber));
-    let rowValid=!(this.RowContains(row,randomNumber));
+    let columnValid=!(this.ColumnContains(randomNumber));
+    let rowValid=!(this.RowContains(randomNumber));
     if(rowValid && columnValid)
     {
       solutionArray[row][column] = randomNumber;
@@ -138,5 +152,17 @@ export class Sudoku
       this.insertionColumn = 0;
       this.insertionRow++;
     }
+  }
+
+
+  ConsoleOutput()
+  {
+    let solutionArray = this.solution;
+    let outputString ="OUTPUT SUDOKU PUZZLE\n";
+    for(let i = 0; i < 9; i++)
+    {
+      outputString += ("ROW: "+i+" |" + solutionArray[i]+"|\n");
+    }
+    console.log(outputString);
   }
 }
