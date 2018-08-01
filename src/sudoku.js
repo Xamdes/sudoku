@@ -9,7 +9,12 @@ export class Sudoku
 
   CreatePuzzle()
   {
-
+    console.log("CREATE PUZZLE");
+    console.log(this.solution);
+    while(this.solution[8][8] === 0)
+    {
+      this.InsertNextNumber(RandomInt(9));
+    }
   }
 
   ResetArray()
@@ -23,7 +28,7 @@ export class Sudoku
 
   static DefaultRow()
   {
-    let temp = [1,2,3,4,5,6,7,8,9];
+    let temp = [9,8,7,6,5,4,3,2,1];
     return temp;
   }
 
@@ -67,10 +72,14 @@ export class Sudoku
 
   ValidColumn(columnNumber)
   {
-    let tempSolution = this.solution[columnNumber].slice().sort();
+    let tempSolution = this.solution[columnNumber].slice().sort().reverse();
     for(let i = 0; i < 9; i++)
     {
-      if(tempSolution[i] != this.constructor.DefaultRow()[i])
+      if(tempSolution[i] === 0)
+      {
+        return true;
+      }
+      else if(tempSolution[i] != this.constructor.DefaultRow()[i])
       {
         return false;
       }
@@ -85,10 +94,14 @@ export class Sudoku
     {
       tempRow.push(this.solution[i][rowNumber]);
     }
-    tempRow.sort();
+    tempRow.sort().reverse();
     for(let i = 0; i < 9; i++)
     {
-      if(tempRow[i] != this.constructor.DefaultRow()[i])
+      if(tempRow[i] === 0)
+      {
+        return true;
+      }
+      else if(tempRow[i] != this.constructor.DefaultRow()[i])
       {
         return false;
       }
@@ -98,7 +111,7 @@ export class Sudoku
 
   InsertNextNumber(number)
   {
-    if(insertionPoint[0] === -1)
+    if(this.insertionPoint[0] === -1)
     {
       for(let i = 0; i < 9; i++)
       {
@@ -114,7 +127,8 @@ export class Sudoku
     }
     let column = this.insertionpoint[0];
     let row = this.insertionpoint[1];
-    this.soltion[column,row] = number;
+    console.log(row+" | "+column);
+    this.solution[column][row] = number;
     if(this.ValidColumn(column) && this.ValidRow(row))
     {
       this.insertionPoint = [-1,-1];

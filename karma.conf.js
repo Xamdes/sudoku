@@ -23,6 +23,9 @@ module.exports = function(config) {
       'karma-jasmine-html-reporter',
       'karma-eslint'
     ],
+    client: {
+      captureConsole: true
+    },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
