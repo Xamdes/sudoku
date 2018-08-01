@@ -12,3 +12,5 @@
   * Fill in array for legal sudoku puzzle solution
   * Make separate array as a copy of the solution array
   * Take out x amount of elements from array to create sudoku puzzle version
+  * Create a valid array of numbers for insertion point
+    * Pull Random number from valid array for that point

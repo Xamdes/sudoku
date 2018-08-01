@@ -12,7 +12,7 @@ export class Sudoku
   {
     console.log("CREATE PUZZLE");
     let successfuleInsert = false;
-    for(let i = 0; i<47; )
+    for(let i=0;i<40;)
     {
       successfuleInsert = this.InsertNextNumber();
       if(successfuleInsert)
