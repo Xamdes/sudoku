@@ -9,17 +9,25 @@ export class Sudoku
   CreatePuzzle()
   {
     console.log("CREATE PUZZLE");
+    let notDone = true;
 
-    this.FillBlock(0);
-    this.FillBlock(1);
-    this.FillBlock(2);
-    this.FillBlock(6);
-    this.FillBlock(7);
-    this.FillBlock(8);
-    this.FillBlock(3);
-    this.FillLastTwoBlocks(4,5);
+    while(notDone)
+    {
+      this.ResetArray();
+      this.FillBlock(0);
+      this.FillBlock(1);
+      this.FillBlock(2);
+      this.FillBlock(6);
+      this.FillBlock(7);
+      this.FillBlock(8);
+      this.FillBlock(3);
 
-
+      let success = this.FillLastTwoBlocks(4,5);
+      if(success)
+      {
+        notDone = false;
+      }
+    }
   }
 
   ResetArray()
@@ -79,25 +87,34 @@ export class Sudoku
       rows = [];
     }
 
-    let offsetX = offsets[0];
-    let offsetY = offsets[1];
-
+    let emptyArraysFound = false;
+    let singleArraysFound = false;
     for(let i=0;i<3;i++)
     {
       for(let j =0;j<6;j++)
       {
-        outputString += ("["+TwoBlocks[i][j]+"]");
-        if(TwoBlocks[i][j].length === 1)
+        let offsetX = blockOneOffsets[0]+i;
+        let offsetY = blockOneOffsets[1]+j;
+        let valueArray = TwoBlocks[i][j];
+
+        outputString += ("["+valueArray+"]");
+
+        if(valueArray.length === 1)
         {
-          console.log(TwoBlocks[i][j][0]);
-          InsertNumberAt(i,j)
+          let value = valueArray[0];
+          console.log("INSERTING POINT ("+offsetX+","+offsetY+") "+ "VALUE: "+value);
+          this.InsertNumberAt(offsetX,offsetY,value);
+          singleArraysFound = true;
+        }
+        if(valueArray.length === 0)
+        {
+          emptyArraysFound = true;
         }
       }
       outputString += ("\n");
     }
     console.log(outputString);
-
-
+    return !(emptyArraysFound || !singleArraysFound)
   }
 
   ResetBlock(blockNumber)
