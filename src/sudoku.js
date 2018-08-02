@@ -12,7 +12,7 @@ export class Sudoku
   {
     console.log("CREATE PUZZLE");
     let successfuleInsert = false;
-    for(let i=0;i<40;)
+    for(let i=0;i<60;)
     {
       successfuleInsert = this.InsertNextNumber();
       if(successfuleInsert)
@@ -45,11 +45,11 @@ export class Sudoku
       let otherSolution = [];
       for(let i = 0; i < 9; i++)
       {
-        thisSolution.push(this.solution[i].slice().sort());
+        thisSolution.push(this.solution[i].slice().sort(NumberSort));
       }
       for(let i = 0; i < 9; i++)
       {
-        otherSolution.push(otherSudoku.solution[i].slice().sort());
+        otherSolution.push(otherSudoku.solution[i].slice().sort(NumberSort));
       }
       return thisSolution.Equals(otherSolution);
     }
@@ -90,7 +90,7 @@ export class Sudoku
 
   RowContains(number)
   {
-    let tempRow = this.solution[this.insertionRow].slice().sort().reverse();
+    let tempRow = this.solution[this.insertionRow].slice().sort(NumberSort).reverse();
     for(let i = 0; i < tempRow.length;i++)
     {
       if(tempRow[i] === number)
@@ -101,15 +101,55 @@ export class Sudoku
     return false;
   }
 
-  OneSpotLeft()
+  OneSpotInRowLeft()
   {
     let tempRow = this.solution[this.insertionRow];
     let returnValue = 45;
-    for(let i = 0; i < 9; i++)
+    tempRow.forEach(element)
     {
-      returnValue -= tempRow[i];
+      returnValue -= element;
     }
     return returnValue;
+  }
+
+  GetValidNumbersForPosition(column,row)
+  {
+    //What a full row, column or block should contain
+    let validArray = [1,2,3,4,5,6,7,8,9];
+    let returnArray = [];
+    let solutionMatrix = this.solution;
+
+    //Create Row
+    let positionRow = solutionMatrix[row].slice();
+    let positionColumn = [];
+    //Create Column
+    for(let i = 0; i < 9; i++)
+    {
+      positionColumn.push(solutionMatrix[i][column]);
+    }
+
+    let combined = positionRow.concat(positionColumn);
+    combined.sort(NumberSort);
+
+    for(let i = 0; i < 9; i++)
+    {
+      combined.forEach(function(element){
+        if(validArray[i] === element)
+        {
+          validArray[i] = 0;
+        }
+      });
+    }
+
+    validArray.forEach(function(element){
+      if(element != 0)
+      {
+        returnArray.push(element);
+      }
+    });
+
+    return returnArray;
+
   }
 
   InsertNextNumber()
@@ -124,10 +164,13 @@ export class Sudoku
     let insertionArray = this.insertionIndex;
     let column = this.insertionColumn;
     let row = this.insertionRow;
-    if(row === 8)
-    {
-      randomNumber = this.OneSpotLeft();
-    }
+
+    let validArray = this.GetValidNumbersForPosition(column,row);
+
+    let validLength = validArray.length;
+    randomNumber = validArray[randomNumber%validLength];
+
+    console.log(validArray);
     console.log("INSERTING: "+randomNumber+" AT:"+row+":"+column);
     let columnValid=!(this.ColumnContains(randomNumber));
     let rowValid=!(this.RowContains(randomNumber));
@@ -165,4 +208,10 @@ export class Sudoku
     }
     console.log(outputString);
   }
+}
+
+
+function NumberSort(a,b)
+{
+  return a - b;
 }
