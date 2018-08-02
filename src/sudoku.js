@@ -12,15 +12,24 @@ export class Sudoku
 
     //[4,1,3,7,5,0,8,2,6];
 
+    // this.FillBlock(0);
+    // this.FillBlock(8);
+    // this.FillBlock(2);
+    // this.FillBlock(6);
+    // this.FillBlock(4);
+    // this.FillBlock(1);
+    // this.FillBlock(7);
+
     this.FillBlock(0);
-    this.FillBlock(4);
-    this.FillBlock(8);
-    this.FillBlock(5);
     this.FillBlock(1);
-    this.FillBlock(6);
     this.FillBlock(2);
-    //this.FillBlock(3);
-    //this.FillBlock(7);
+    this.FillBlock(6);
+    this.FillBlock(7);
+    this.FillBlock(8);
+    this.FillBlock(3);
+    //this.FillBlock(5);
+    //this.FillBlock(5);
+
 
   }
 
@@ -45,7 +54,7 @@ export class Sudoku
     while(repeatLoop)
     {
       repeatLoop=false;
-      for(let row=blockOffset[0];row<rowBound;row++)
+      for(let row=blockOffset[0];row<rowBound && (!repeatLoop);row++)
       {
         for(let column=blockOffset[1];column<columnBound && (!repeatLoop);column++)
         {
