@@ -10,16 +10,6 @@ export class Sudoku
   {
     console.log("CREATE PUZZLE");
 
-    //[4,1,3,7,5,0,8,2,6];
-
-    // this.FillBlock(0);
-    // this.FillBlock(8);
-    // this.FillBlock(2);
-    // this.FillBlock(6);
-    // this.FillBlock(4);
-    // this.FillBlock(1);
-    // this.FillBlock(7);
-
     this.FillBlock(0);
     this.FillBlock(1);
     this.FillBlock(2);
@@ -27,8 +17,7 @@ export class Sudoku
     this.FillBlock(7);
     this.FillBlock(8);
     this.FillBlock(3);
-    //this.FillBlock(5);
-    //this.FillBlock(5);
+    this.FillLastTwoBlocks(4,5);
 
 
   }
@@ -59,7 +48,7 @@ export class Sudoku
         for(let column=blockOffset[1];column<columnBound && (!repeatLoop);column++)
         {
           //&& (!repeatLoop)
-          repeatLoop = !(this.InsertNumberAt(row,column));
+          repeatLoop = !(this.InsertRandomNumberAt(row,column));
           if(repeatLoop)
           {
             this.ResetBlock(blockNumber);
@@ -68,6 +57,47 @@ export class Sudoku
         }
       }
     }
+  }
+
+  //Special algorithm when last two blocks need to be filled
+  FillLastTwoBlocks(blockOne)
+  {
+    let solutionMatrix = this.solution;
+    let offsets = [[0,0],[0,3],[0,6],[3,0],[3,3],[3,6],[6,0],[6,3],[6,6]];
+    let blockOneOffsets = offsets[blockOne];
+    let TwoBlocks = [];
+    let rows = [];
+    let outputString = "\n";
+
+    for(let row=blockOneOffsets[0]; row<6;row++)
+    {
+      for(let column=blockOneOffsets[1];column<9;column++)
+      {
+        rows.push(this.GetValidNumbersForPosition(column,row));
+      }
+      TwoBlocks.push(rows.slice());
+      rows = [];
+    }
+
+    let offsetX = offsets[0];
+    let offsetY = offsets[1];
+
+    for(let i=0;i<3;i++)
+    {
+      for(let j =0;j<6;j++)
+      {
+        outputString += ("["+TwoBlocks[i][j]+"]");
+        if(TwoBlocks[i][j].length === 1)
+        {
+          console.log(TwoBlocks[i][j][0]);
+          InsertNumberAt(i,j)
+        }
+      }
+      outputString += ("\n");
+    }
+    console.log(outputString);
+
+
   }
 
   ResetBlock(blockNumber)
@@ -136,7 +166,7 @@ export class Sudoku
     let positionRow = this.GetRow(row);
     let positionColumn = this.GetColumn(column);
     let positionBlock = this.GetBlock(row,column);
-    console.log("Block: "+positionBlock);
+    //console.log("Block: "+positionBlock);
 
     let combined = positionRow.concat(positionColumn).concat(positionBlock);
     combined.sort(NumberSort);
@@ -162,9 +192,8 @@ export class Sudoku
     return returnArray;
   }
 
-  InsertNumberAt(row,column)
+  InsertRandomNumberAt(row,column)
   {
-    //let 45;
     let randomNumber = (Math.floor((Math.random() * 100)%9)+1);
     let solutionArray = this.solution;
     let validArray = this.GetValidNumbersForPosition(column,row);
@@ -175,11 +204,15 @@ export class Sudoku
     {
       randomNumber = 0;
     }
-
-    console.log(validArray);
-    console.log("INSERTING: "+randomNumber+" AT POSITION("+row+","+column+")");
     solutionArray[row][column] = randomNumber;
     return (randomNumber!=0);
+  }
+
+  InsertNumberAt(row,column,value)
+  {
+    let solutionArray = this.solution;
+    solutionArray[row][column] = value;
+    return (value!=0);
   }
 
   ConsoleOutput()
