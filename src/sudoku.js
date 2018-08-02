@@ -69,6 +69,26 @@ export class Sudoku
     return true;
   }
 
+  GetColumn(column)
+  {
+    let solutionMatrix = this.solution;
+    let columnArray = [];
+    //Create Column
+    for(let i = 0; i < 9; i++)
+    {
+      columnArray.push(solutionMatrix[i][column]);
+    }
+    return columnArray;
+
+  }
+
+  GetRow(row)
+  {
+    let solutionMatrix = this.solution;
+    let rowArray = solutionMatrix[row].slice();
+    return rowArray;
+  }
+
   GetValidNumbersForPosition(column,row)
   {
     //What a full row, column or block should contain
@@ -76,37 +96,33 @@ export class Sudoku
     let returnArray = [];
     let solutionMatrix = this.solution;
 
-    //Create Row
-    let positionRow = solutionMatrix[row].slice();
-    let positionColumn = [];
-    //Create Column
-    for(let i = 0; i < 9; i++)
-    {
-      positionColumn.push(solutionMatrix[i][column]);
-    }
+    let positionRow = this.GetRow(row);
+    let positionColumn = this.GetColumn(column);
+
 
     let combined = positionRow.concat(positionColumn);
     combined.sort(NumberSort);
 
+    /*Check Each Number in Valid Array if it isn't in the combinedArray
+    then it must be a valid number
+    */
     for(let i = 0; i < 9; i++)
     {
-      combined.forEach(function(element){
+      let checkNumber = validArray[i];
+      combined.forEach(function(element)
+      {
         if(validArray[i] === element)
         {
-          validArray[i] = 0;
+          checkNumber = 0;
         }
       });
+      if(checkNumber != 0)
+      {
+        returnArray.push(checkNumber);
+      }
     }
 
-    validArray.forEach(function(element){
-      if(element != 0)
-      {
-        returnArray.push(element);
-      }
-    });
-
     return returnArray;
-
   }
 
   InsertNextNumber()
