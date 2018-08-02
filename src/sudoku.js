@@ -9,7 +9,6 @@ export class Sudoku
   CreatePuzzle()
   {
     console.log("CREATE PUZZLE");
-    let successfuleInsert = false;
 
     //[4,1,3,7,5,0,8,2,6];
 
@@ -19,8 +18,9 @@ export class Sudoku
     this.FillBlock(5);
     this.FillBlock(1);
     this.FillBlock(6);
-    // this.FillBlock(8);
-    // this.FillBlock(2);
+    this.FillBlock(2);
+    //this.FillBlock(3);
+    //this.FillBlock(7);
 
   }
 
@@ -36,24 +36,26 @@ export class Sudoku
 
   FillBlock(blockNumber)
   {
+    console.log("FILLING BLOCK: "+blockNumber);
     let offsets = [[0,0],[0,3],[0,6],[3,0],[3,3],[3,6],[6,0],[6,3],[6,6]];
     let blockOffset = offsets[blockNumber];
     let rowBound = 3+blockOffset[0];
     let columnBound = 3+blockOffset[1];
-    let repeatLoop = false;
-    let row = 0;
-    let column = 0;
-
-    repeat:
-    for(row=blockOffset[0];row<rowBound;row++)
+    let repeatLoop = true;
+    while(repeatLoop)
     {
-      for(column=blockOffset[1];column<columnBound;column++)
+      repeatLoop=false;
+      for(let row=blockOffset[0];row<rowBound;row++)
       {
-        repeatLoop = this.InsertNumberAt(row,column);
-        if(!repeatLoop)
+        for(let column=blockOffset[1];column<columnBound && (!repeatLoop);column++)
         {
-          this.ResetBlock(blockNumber);
-          continue repeat;
+          //&& (!repeatLoop)
+          repeatLoop = !(this.InsertNumberAt(row,column));
+          if(repeatLoop)
+          {
+            this.ResetBlock(blockNumber);
+            console.log("REPEAT");
+          }
         }
       }
     }
@@ -166,7 +168,7 @@ export class Sudoku
     }
 
     console.log(validArray);
-    console.log("INSERTING: "+randomNumber+" AT:"+row+":"+column);
+    console.log("INSERTING: "+randomNumber+" AT POSITION("+row+","+column+")");
     solutionArray[row][column] = randomNumber;
     return (randomNumber!=0);
   }
