@@ -69,49 +69,6 @@ export class Sudoku
     return true;
   }
 
-  ColumnContains(number)
-  {
-    let tempSolution = this.solution;
-    let tempColumn = [];
-    for(let i = 0; i < 9; i++)
-    {
-      tempColumn.push(tempSolution[i][this.insertionColumn]);
-    }
-
-    for(let i = 0; i < tempColumn.length;i++)
-    {
-      if(tempColumn[i] === number)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  RowContains(number)
-  {
-    let tempRow = this.solution[this.insertionRow].slice().sort(NumberSort).reverse();
-    for(let i = 0; i < tempRow.length;i++)
-    {
-      if(tempRow[i] === number)
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  OneSpotInRowLeft()
-  {
-    let tempRow = this.solution[this.insertionRow];
-    let returnValue = 45;
-    tempRow.forEach(element)
-    {
-      returnValue -= element;
-    }
-    return returnValue;
-  }
-
   GetValidNumbersForPosition(column,row)
   {
     //What a full row, column or block should contain
@@ -161,7 +118,6 @@ export class Sudoku
       randomNumber = 9;
     }
     let solutionArray = this.solution;
-    let insertionArray = this.insertionIndex;
     let column = this.insertionColumn;
     let row = this.insertionRow;
 
@@ -172,19 +128,9 @@ export class Sudoku
 
     console.log(validArray);
     console.log("INSERTING: "+randomNumber+" AT:"+row+":"+column);
-    let columnValid=!(this.ColumnContains(randomNumber));
-    let rowValid=!(this.RowContains(randomNumber));
-    if(rowValid && columnValid)
-    {
-      solutionArray[row][column] = randomNumber;
-      this.IncrementInsertionPoint();
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-
+    solutionArray[row][column] = randomNumber;
+    this.IncrementInsertionPoint();
+    return true;
   }
 
   IncrementInsertionPoint()
