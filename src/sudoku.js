@@ -70,25 +70,14 @@ export class Sudoku
   //Special algorithm when last two blocks need to be filled
   FillLastTwoBlocks(blockOne)
   {
-    let solutionMatrix = this.solution;
     let offsets = [[0,0],[0,3],[0,6],[3,0],[3,3],[3,6],[6,0],[6,3],[6,6]];
     let blockOneOffsets = offsets[blockOne];
-    let TwoBlocks = [];
-    let rows = [];
-    let outputString = "\n";
-
-    for(let row=blockOneOffsets[0]; row<6;row++)
-    {
-      for(let column=blockOneOffsets[1];column<9;column++)
-      {
-        rows.push(this.GetValidNumbersForPosition(column,row));
-      }
-      TwoBlocks.push(rows.slice());
-      rows = [];
-    }
-
+    let TwoBlocks = this.GetValidNumbersForTwoBlocks(blockOne,blockOneOffsets);
     let emptyArraysFound = false;
     let singleArraysFound = false;
+    let outputString = "\n";
+
+    //Run This Once
     for(let i=0;i<3;i++)
     {
       for(let j =0;j<6;j++)
@@ -114,7 +103,27 @@ export class Sudoku
       outputString += ("\n");
     }
     console.log(outputString);
-    return !(emptyArraysFound || !singleArraysFound)
+    if(emptyArraysFound || !singleArraysFound)
+    {
+      return false;
+    }
+    //Run until Solution Found
+  }
+
+  GetValidNumbersForTwoBlocks(blockOne,blockOneOffsets)
+  {
+    let TwoBlocks = [];
+    let rows = [];
+    for(let row=blockOneOffsets[0]; row<6;row++)
+    {
+      for(let column=blockOneOffsets[1];column<9;column++)
+      {
+        rows.push(this.GetValidNumbersForPosition(column,row));
+      }
+      TwoBlocks.push(rows.slice());
+      rows = [];
+    }
+    return TwoBlocks;
   }
 
   ResetBlock(blockNumber)
@@ -235,7 +244,7 @@ export class Sudoku
   ConsoleOutput()
   {
     let solutionArray = this.solution;
-    let outputString ="OUTPUT SUDOKU PUZZLE\n";
+    let outputString ="OUTPUT SUDOKUS PUZZLE\n";
     for(let i = 0; i < 9; i++)
     {
       outputString += ("ROW: "+i+" | ");
