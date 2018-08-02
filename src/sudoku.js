@@ -107,7 +107,35 @@ export class Sudoku
     {
       return false;
     }
+
     //Run until Solution Found
+    let limit = 5;
+    for(let checker=0;checker<limit;checker++)
+    {
+      TwoBlocks = this.GetValidNumbersForTwoBlocks(blockOne,blockOneOffsets);
+      outputString = "\n";
+      for(let i=0;i<3;i++)
+      {
+        for(let j =0;j<6;j++)
+        {
+          let offsetX = blockOneOffsets[0]+i;
+          let offsetY = blockOneOffsets[1]+j;
+          let valueArray = TwoBlocks[i][j];
+
+          outputString += ("["+valueArray+"]");
+
+          if(valueArray.length === 1)
+          {
+            let value = valueArray[0];
+            console.log("INSERTING POINT ("+offsetX+","+offsetY+") "+ "VALUE: "+value);
+            this.InsertNumberAt(offsetX,offsetY,value);
+          }
+        }
+        outputString += ("\n");
+      }
+      console.log(outputString);
+    }
+    return true;
   }
 
   GetValidNumbersForTwoBlocks(blockOne,blockOneOffsets)
